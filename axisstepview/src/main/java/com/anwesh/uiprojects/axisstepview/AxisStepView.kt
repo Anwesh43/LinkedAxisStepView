@@ -20,6 +20,7 @@ val strokeFactor : Int = 90
 val sizeFactor : Float = 2.8f
 val foreColor : Int = Color.parseColor("#43A047")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val DELAY : Long = 25
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -42,7 +43,7 @@ fun Canvas.drawASNode(i : Int, scale : Float, paint : Paint) {
     paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
     save()
-    translate(w / 2, gap * (i + 1))
+    translate(w / 2, gap * (i + 1) + h/10)
     translate(-size, -size)
     drawLine(0f, 0f, 1.75f * size * sc2, -1.75f * size * sc2, paint)
     for (j in 0..(axises - 1)) {
@@ -111,7 +112,7 @@ class AxisStepView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(DELAY)
                     view.invalidate()
                 } catch(ex : Exception) {
 
