@@ -196,4 +196,25 @@ class AxisStepView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : AxisStepView) {
+        private val animator : Animator = Animator(view)
+        private val axisStep : AxisStep = AxisStep(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            axisStep.draw(canvas, paint)
+            animator.animate {
+                axisStep.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            axisStep.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
