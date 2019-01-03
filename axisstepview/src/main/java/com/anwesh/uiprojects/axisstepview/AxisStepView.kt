@@ -218,4 +218,13 @@ class AxisStepView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : AxisStepView {
+            val view : AxisStepView = AxisStepView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
