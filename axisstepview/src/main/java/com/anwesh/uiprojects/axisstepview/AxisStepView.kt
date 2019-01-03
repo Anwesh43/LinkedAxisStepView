@@ -56,7 +56,7 @@ fun Canvas.drawASNode(i : Int, scale : Float, paint : Paint) {
         for (j in 0..(axises - 1)) {
             save()
             rotate(45f * (1 - 2 * j) * scj2)
-            drawLine(0f, 0f, 0f, -arrowSize)
+            drawLine(0f, 0f, 0f, -arrowSize, paint)
             restore()
         }
         restore()
@@ -127,6 +127,50 @@ class AxisStepView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class ASNode(var i : Int, val state : State = State()) {
+
+        private var next : ASNode? = null
+        private var prev : ASNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = ASNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawASNode(i, state.scale, paint)
+            prev?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : ASNode {
+            var curr : ASNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
