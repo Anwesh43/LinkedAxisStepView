@@ -134,6 +134,27 @@ class AxisStepView(ctx : Context) : View(ctx) {
         }
     }
 
+    data class SineState(var scale : Float = 0f, var deg : Double = 0.0, var prevDeg : Double = 0.0, var dir : Float = 0f) {
+
+        fun update(cb : (Float) -> Unit) {
+            deg += Math.PI/9
+            scale = Math.abs(Math.sin(deg).toFloat())
+            if (Math.abs(deg - prevDeg) > Math.PI/2) {
+                deg = prevDeg + Math.PI/2
+                scale = Math.sin(deg).toFloat()
+                dir = 0f
+                prevDeg = deg
+                cb(scale)
+            }
+        }
+
+        fun startUpdating() {
+            if (dir == 0f) {
+                dir = 1f
+            }
+        }
+    }
+
     data class ASNode(var i : Int, val state : State = State()) {
 
         private var next : ASNode? = null
