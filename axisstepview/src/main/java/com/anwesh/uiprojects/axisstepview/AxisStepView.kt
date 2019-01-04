@@ -196,6 +196,7 @@ class AxisStepView(ctx : Context) : View(ctx) {
 
         private var next : ASNode? = null
         private var prev : ASNode? = null
+        private var sqNode : SquareNode = SquareNode(i)
 
         init {
             addNeighbor()
@@ -211,11 +212,16 @@ class AxisStepView(ctx : Context) : View(ctx) {
         fun draw(canvas : Canvas, paint : Paint) {
             canvas.drawASNode(i, state.scale, paint)
             prev?.draw(canvas, paint)
+            sqNode?.draw(canvas, paint)
         }
 
         fun update(cb : (Int, Float) -> Unit) {
-            state.update {
-                cb(i, it)
+            if (state.scale > 0f && state.scale < 1f) {
+                state.update {
+                    sqNode.startUpdating()
+                }
+            } else {
+                sqNode.update(cb)
             }
         }
 
