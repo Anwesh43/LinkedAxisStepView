@@ -175,6 +175,23 @@ class AxisStepView(ctx : Context) : View(ctx) {
         }
     }
 
+    data class SquareNode(var i : Int, val state : SineState = SineState()) {
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawSquare(i, state.scale, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating() {
+            state.startUpdating()
+        }
+    }
+
     data class ASNode(var i : Int, val state : State = State()) {
 
         private var next : ASNode? = null
