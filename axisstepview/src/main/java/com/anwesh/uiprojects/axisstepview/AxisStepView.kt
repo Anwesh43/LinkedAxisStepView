@@ -21,6 +21,7 @@ val sizeFactor : Float = 2.8f
 val foreColor : Int = Color.parseColor("#43A047")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val DELAY : Long = 25
+val sqSize : Float = 2f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -63,6 +64,25 @@ fun Canvas.drawASNode(i : Int, scale : Float, paint : Paint) {
             }
             restore()
         }
+        restore()
+    }
+    restore()
+}
+
+fun Canvas.drawSquare(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes  + 1)
+    val size : Float = gap / sqSize
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = foreColor
+    save()
+    translate(gap * (i + 1), h/2)
+    for (j in 0..3) {
+        save()
+        rotate(90f * j)
+        drawLine(size, -size/2, size, -size/2 + 2 * size * scale, paint)
         restore()
     }
     restore()
