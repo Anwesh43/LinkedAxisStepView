@@ -72,17 +72,17 @@ fun Canvas.drawASNode(i : Int, scale : Float, paint : Paint) {
 fun Canvas.drawSquare(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
-    val gap : Float = w / (nodes  + 1)
+    val gap : Float = h / (nodes  + 1)
     val size : Float = gap / sqSize
     paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
     paint.color = foreColor
     save()
-    translate(gap * (i + 1), h/2)
+    translate(w/2, gap * (i + 1))
     for (j in 0..3) {
         save()
         rotate(90f * j)
-        drawLine(size, -size/2, size, -size/2 + 2 * size * scale, paint)
+        drawLine(size, -size, size, -size + 2 * size * scale, paint)
         restore()
     }
     restore()
@@ -157,7 +157,7 @@ class AxisStepView(ctx : Context) : View(ctx) {
     data class SineState(var scale : Float = 0f, var deg : Double = 0.0, var prevDeg : Double = 0.0, var dir : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
-            deg += Math.PI/9
+            deg += Math.PI/18
             scale = Math.abs(Math.sin(deg).toFloat())
             if (Math.abs(deg - prevDeg) > Math.PI/2) {
                 deg = prevDeg + Math.PI/2
@@ -216,13 +216,13 @@ class AxisStepView(ctx : Context) : View(ctx) {
         }
 
         fun update(cb : (Int, Float) -> Unit) {
-            if (state.scale > 0f && state.scale < 1f) {
-                state.update {
-                    sqNode.startUpdating()
-                }
-            } else {
+            state.update {
+                sqNode.startUpdating()
+            }
+            if (state.scale == 0f || state.scale == 1f) {
                 sqNode.update(cb)
             }
+
         }
 
         fun startUpdating(cb : () -> Unit) {
